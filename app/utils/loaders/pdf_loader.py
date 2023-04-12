@@ -1,4 +1,5 @@
-import logging,os
+import logging
+import os
 
 import arxiv
 from chromadb.config import Settings
@@ -34,7 +35,9 @@ def load_data():
     print("What would you like to search for?")
     category = input()
     papers = arxiv.Search(
-        query=f'ti:"{category}"', max_results=15, sort_by=arxiv.SortCriterion.SubmittedDate
+        query=f'ti:"{category}"',
+        max_results=15,
+        sort_by=arxiv.SortCriterion.SubmittedDate,
     )
     for paper in papers.results():
         paper.download_pdf(dirpath=docs_path)
