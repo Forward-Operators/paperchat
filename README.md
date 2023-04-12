@@ -2,9 +2,14 @@
 
 ## Dependencies
 - python >=3.10
+- poetry
 - chromadb
 - langchain
 - arxiv
+
+## Setup
+python >= 3.10, `poetry shell`, `poetry install` and all dependencies should be resolved.
+there will be also Dockerfile - for cli and API versions respectively
 
 ## Ingesting
 `python app/utils/loaders/pdf_loader.py`
