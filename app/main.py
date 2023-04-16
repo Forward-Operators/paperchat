@@ -1,36 +1,22 @@
-import os
+import sentry_sdk
+from api.api_v1.api import api_router
+from core.config import settings
+from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
 
-from chromadb.config import Settings
-from langchain.chains import ConversationalRetrievalChain
-from langchain.chat_models import ChatOpenAI
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.llms import OpenAI
-from langchain.vectorstores import Chroma
+# sentry_sdk.init(dsn=settings.SENTRY_DSN, traces_sample_rate=0.7)
 
+app = FastAPI(
+    title=settings.PROJECT_NAME, openapi_url=f"{settings.API_V1_STR}/openapi.json"
+)
 
-def chat():
-    embeddings = OpenAIEmbeddings()
-    chroma_settings = Settings(
-        chroma_api_impl="rest",
-        chroma_server_host=os.environ(CHROMA_HOST, "localhost"),
-        chroma_server_http_port=os.environ(CHROMA_PORT, "8000"),
+if settings.BACKEND_CORS_ORIGINS:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[str(origin) for origin in settings.BACKEND_CORS_ORIGINS],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
     )
-    vectordb = Chroma(embedding_function=embeddings, client_settings=chroma_settings)
-    pdf_qa = ConversationalRetrievalChain.from_llm(
-        OpenAI(temperature=0.9, model_name="gpt-3.5-turbo"),
-        vectordb.as_retriever(),
-        return_source_documents=True,
-    )
-    chat_history = []
-    print("What would you like to ask?")
-    query = input()
-    result = pdf_qa({"question": query, "chat_history": chat_history})
-    print("Answer:")
-    print(result["answer"])
-    print("Source:")
-    print(result["source_documents"])
 
-
-if __name__ == "__main__":
-    while True:
-        chat()
+app.include_router(api_router, prefix=settings.API_V1_STR)
