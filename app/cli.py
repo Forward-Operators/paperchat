@@ -14,6 +14,7 @@ def chat():
         chroma_api_impl="rest",
         chroma_server_host=os.getenv("CHROMA_HOST", "localhost"),
         chroma_server_http_port=os.getenv("CHROMA_PORT", "8000"),
+        anonymized_telemetry=False,
     )
     vectordb = Chroma(embedding_function=embeddings, client_settings=chroma_settings)
     pdf_qa = ConversationalRetrievalChain.from_llm(

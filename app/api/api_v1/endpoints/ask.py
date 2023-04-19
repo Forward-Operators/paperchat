@@ -1,8 +1,9 @@
 import os
 
-from core.config import settings
-from fastapi import APIRouter, HTTPException, Body, status
+from fastapi import APIRouter, Body, HTTPException, status
 from pydantic import BaseModel
+
+from core.config import settings
 from resources.arxiv import chat
 
 router = APIRouter()
