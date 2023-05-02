@@ -1,28 +1,19 @@
 import json
-import os
 
-from chromadb.config import Settings
-from langchain.chains import ConversationalRetrievalChain
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.llms import OpenAI
-from langchain.vectorstores import Chroma
+from langchain.chains.question_answering import load_qa_chain
+from langchain.chat_models import ChatOpenAI
+from tools.factory import get_embeddings, get_database
+
+embeddings = get_embeddings()
+db = get_database()
 
 
 def chat(query):
-    embeddings = OpenAIEmbeddings()
-    chroma_settings = Settings(
-        chroma_api_impl="rest",
-        chroma_server_host=os.getenv("CHROMA_HOST", "localhost"),
-        chroma_server_http_port=os.getenv("CHROMA_PORT", "8000"),
-    )
-    vectordb = Chroma(embedding_function=embeddings, client_settings=chroma_settings)
-    pdf_qa = ConversationalRetrievalChain.from_llm(
-        OpenAI(temperature=0.9, model_name="gpt-3.5-turbo"),
-        vectordb.as_retriever(),
-        return_source_documents=True,
-    )
-    chat_history = []
-    result = pdf_qa({"question": query, "chat_history": chat_history})
+    llm = ChatOpenAI(temperature=0, model_name="gpt-4")
+    chain = load_qa_chain(llm, chain_type="stuff")
+    docs = db.similarity_search(query=query, k=5)
+    # chat_history = []
+    result = chain.run(input_documents=docs, question=query)
     answer = {}
     answer["answer"] = result["answer"]
     answer["source"] = result["source_documents"][0].metadata

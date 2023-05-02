@@ -1,10 +1,9 @@
 import os
 
+from api.models import TaskTicket
 from celery.result import AsyncResult
 from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
-
-from api.models import TaskTicket
 from worker.tasks import ingest_task
 
 router = APIRouter()

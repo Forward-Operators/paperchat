@@ -1,9 +1,8 @@
 import sentry_sdk
-from fastapi import FastAPI
-from starlette.middleware.cors import CORSMiddleware
-
 from api.api_v1.api import api_router
 from core.config import settings
+from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
 
 # sentry_sdk.init(dsn=settings.SENTRY_DSN, traces_sample_rate=0.7)
 
