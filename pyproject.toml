@@ -20,6 +20,8 @@ sentence-transformers = "^2.2.2"
 qdrant-client = "^1.1.5"
 langchain = {extras = ["all"], version = ">0.0.148"}
 feedparser = "^6.0.10"
+pymupdf = "^1.22.2"
+pdfminer-six = "^20221105"
 
 [tool.poetry.group.dev.dependencies]
 isort = "^5.12.0"
