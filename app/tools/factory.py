@@ -24,7 +24,7 @@ def get_embeddings():
             else:
                 model_kwargs = {"device": "cpu"}
             embeddings = HuggingFaceEmbeddings(
-                model_name="all-mpnet-base-v2", model_kwargs=model_kwargs
+                model_name="sentence-transformers/all-mpnet-base-v2", model_kwargs=model_kwargs
             )
 
             return embeddings
@@ -91,7 +91,6 @@ def get_database():
 
             pinecone.init(
                 api_key=os.getenv("PINECONE_API_KEY", "absdef-123456-gfdsa-sss-uuu"),
-                # "",
                 environment=os.getenv(
                     "PINECONE_ENVIRONMENT", "northamerica-northeast1-gcp"
                 ),
