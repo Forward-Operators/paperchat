@@ -94,14 +94,14 @@ resource "google_artifact_registry_repository_iam_member" "docker_pusher_iam" {
 
 
 # Deploy image to Cloud Run
-resource "google_cloud_run_service" "api_test" {
+resource "google_cloud_run_service" "arxivchat" {
   provider = google-beta
-  name     = "api-test"
+  name     = "arxivchat"
   location = var.region
   template {
     spec {
         containers {
-            image = "europe-west4-docker.pkg.dev/${var.project_id}/${var.repository}/${var.docker_image}"
+            image = "europe-central2-docker.pkg.dev/${var.project_id}/${var.repository}/${var.docker_image}"
             resources {
                 limits = {
                 "memory" = "4G"
@@ -140,11 +140,11 @@ resource "google_cloud_run_service_iam_policy" "noauth" {
   provider = google-beta
   location    = var.region
   project     = var.project_id
-  service     = google_cloud_run_service.api_test.name
+  service     = google_cloud_run_service.arxivchat.name
 
   policy_data = data.google_iam_policy.noauth.policy_data
 }
 
 output "cloud_run_instance_url" {
-  value = google_cloud_run_service.api_test.status.0.url
+  value = google_cloud_run_service.arxivchat.status.0.url
 }
