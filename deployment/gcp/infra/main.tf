@@ -1,4 +1,12 @@
 terraform {
+
+  cloud {
+    organization = "ForwardOperators"
+    workspaces {
+      name = "arxivchat"
+    }
+  }
+
   required_providers {
     google-beta = {
       source  = "hashicorp/google-beta"

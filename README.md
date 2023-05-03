@@ -7,6 +7,11 @@
 - langchain
 - arxiv
 
+## Architecture
+
+_miro flowchart here_
+
+
 ## Setup
 Follow these steps to quickly set up and run the arXiv plugin:
 
@@ -24,17 +29,14 @@ Activate the virtual environment: `poetry shell`
 
 Install app dependencies: `poetry install`
 
-Create a bearer token
 
 Set the required environment variables:
 
 ```bash
-export DATASTORE=<your_datastore>
-export BEARER_TOKEN=<your_bearer_token>
+export DATABASE=<your_datastore>
 export OPENAI_API_KEY=<your_openai_api_key>
 
 # Add the environment variables for your chosen vector DB.
-# Some of these are optional; read the provider's setup docs in /docs/providers for more information.
 
 # Pinecone
 export PINECONE_API_KEY=<your_pinecone_api_key>
@@ -52,12 +54,17 @@ export QDRANT_COLLECTION=<your_qdrant_collection>
 # Chroma
 export CHROMA_HOST=<your_chroma_host>
 export CHROMA_PORT=<your_chroma_port>
+export CHROMA_COLLECTION=<your_chroma_collection>
+
+# Embeddings
+export EMBEDDINGS=<openai or huggingface>
+export CUDA_ENABLED=<True or False> - needed for huggingface
 
 ```
 
 Run the API locally: poetry run start
 
-Access the API documentation at http://0.0.0.0:8000/docs and test the API endpoints (make sure to add your bearer token).
+Access the API documentation at http://0.0.0.0:8000/docs and test the API endpoints .
 
 ## Ingesting
 arXiv has a dataset of almost 2 million publications. it is against arXiv's ToS to fetch too much data from their website (as it creates load)
@@ -65,7 +72,7 @@ Fortunately, good people from [kaggle](https://kaggle.com) together with Cornell
 The dataset is freely available via Google Cloud Storage buckets and updated weekly.
 
 Now the main issues is - how to get only a subset of that entire dataset if we don't want to ingest over 5 terabytes of pdf files?
-Datase is divided into directories per-mont, per-year, so if you'd like to get all publications from September of 2021, you could just run:
+Dataset is divided into directories per-month, per-year, so if you'd like to get all publications from September of 2021, you could just run:
 `gsutil cp -r gs://arxiv-dataset/arxiv/pdf/2109/ ./local_directory`
 
 If you'd like to get an entire dataset:
@@ -73,15 +80,40 @@ If you'd like to get an entire dataset:
 
 But if you want to get only a subset (for a given category and dates) take a look into `download.py` file.
 
+By default ingester is expecting this files to be at `/mnt/dataset/arxiv/pdf` with all pdf files there.
+
+Check out and run `python scripy.py` to ingest data. You can also enable debugging there if something doesn't work.
+
+_TODO: maybe change this to directory loader_
+_TODO: implement celery deployment and use worker for ingestion_
+
 
 ## Query
 `python cli.py`
+![cli.py](./images/cli.png "image Title")
 
-Ask the question about the topic you've fed the chromadb before. Return information about sources as well, run continously.
+
+Ask the question about the topic you've fed the database before. Returns information about sources as well, runs continously.
+Another option is to use REST API (run `uvicorn main:app --reload --host 0.0.0.0 --port 8000` from the `app` directory) or use it as ChatGPT plugin (after deployment)
+
+## Deployment
+There are terraform files in `deployment` directory. Use one that suits you best. There's README file in each of them with instructions.
+You can also just build a Docker image and run it wherever you want. The image file is quite big though. 
+
+### GCP
+For now it's deployed as Cloud Run using docker image, so it's API only deployment. Data ingestion must be run on other machine (I do recommend GPU-enabled Compute Engines, especially if you'd like to use Hugging Face embeddings and because you can mount datase from Google Storage directly using `gcsfuse`)
+Potential [solution](https://cloud.google.com/run/docs/tutorials/network-filesystems-fuse) to use GCS bucket with Cloud Run
+### Azure
+For now it's deployed as Container Apps (API only deployment, you need another deployment for ingester)
+
+### AWS
+AWS is not supported yet. Coming soon.
+
 
 ## ToDO
 - [ ] Automount gs arxiv bucket on deployment.
 - [ ] Option to use Azure OpenAI.
+- [ ] AWS deployment
 
 ## Issues & contribution
 If you have any problems please use GitHub issues to report them.
