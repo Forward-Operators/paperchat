@@ -4,6 +4,7 @@ from tools.factory import get_embeddings, get_database
 
 import arxiv
 from langchain.document_loaders import PyPDFLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 logging.basicConfig(level=logging.INFO)
 
@@ -16,8 +17,11 @@ def load_to_database(pdf_path):
         f = os.path.join(pdf_path, filename)
         # checking if it is a file
         if os.path.isfile(f):
+            text_splitter = RecursiveCharacterTextSplitter(
+                chunk_size=1000, chunk_overlap=300, length_function=len,
+            )
             loader = PyPDFLoader(f)
-            pages = loader.load_and_split()
+            pages = loader.load_and_split(text_splitter=text_splitter)
             db.add_documents(documents=pages)
 
 
@@ -30,8 +34,11 @@ def load_from_remote(pdf_url):
 
 
 def load_data():
-    """Load data from arxiv"""
-    docs_path = "./docs"
+    """
+    Loads data from arxiv for given category
+    Limited to 150 results, but you can change it
+    """
+    docs_path = "/mnt/datasets/arxiv/pdf/"
     print("What would you like to search for?")
     category = input()
     papers = arxiv.Search(
@@ -41,7 +48,7 @@ def load_data():
     )
     for paper in papers.results():
         paper.download_pdf(dirpath=docs_path)
-        load_from_remote(paper.pdf_url)
+        # load_from_remote(paper.pdf_url) <- you can use this if you want to load from remote url directly
         load_to_database(docs_path)
 
 
