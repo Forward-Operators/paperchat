@@ -26,6 +26,9 @@ share/python-wheels/
 *.egg
 MANIFEST
 
+# terraform
+.terraform/
+
 # .vscode files
 .vscode/*
 
