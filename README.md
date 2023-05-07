@@ -1,5 +1,14 @@
 # arxivchat
 
+Welcome to arXivchat!
+
+arXivchat is LLM based software that let's you talk about arXiv published papers in a conversational way.
+It works as a cli tool, API provider and ChatGPT plugin.
+
+Made by [Forward Operators](https://fwdoperators.com). We work with some of the smartest people on LLM and ML-related projects.
+
+You are more than welcome to contribute!
+
 ## Dependencies
 - python >=3.10
 - poetry
@@ -15,19 +24,19 @@ _miro flowchart here_
 ## Setup
 Follow these steps to quickly set up and run the arXiv plugin:
 
-Install Python 3.10, if not already installed.
+- Install Python 3.10, if not already installed.
 
-Clone the repository: git clone https://github.com/fwdops/arxivchat.git
+- Clone the repository: git clone https://github.com/fwdops/arxivchat.git
 
-Navigate to the cloned repository directory: cd /path/to/arxivchat
+- Navigate to the cloned repository directory: cd /path/to/arxivchat
 
-Install poetry: `pip install poetry`
+- Install poetry: `pip install poetry`
 
-Create a new virtual environment with Python 3.10: `poetry env use python3.10`
+- Create a new virtual environment with Python 3.10: `poetry env use python3.10`
 
-Activate the virtual environment: `poetry shell`
+- Activate the virtual environment: `poetry shell`
 
-Install app dependencies: `poetry install`
+- Install app dependencies: `poetry install`
 
 
 Set the required environment variables:
@@ -62,7 +71,7 @@ export CUDA_ENABLED=<True or False> - needed for huggingface
 
 ```
 
-Run the API locally: poetry run start
+Run the API locally: `cd app/; gunicorn --worker-class uvicorn.workers.UvicornWorker --config ./gunicorn_conf.py main:app`
 
 Access the API documentation at http://0.0.0.0:8000/docs and test the API endpoints .
 
@@ -109,12 +118,38 @@ For now it's deployed as Container Apps (API only deployment, you need another d
 ### AWS
 AWS is not supported yet. Coming soon.
 
+## Embeddings
+
+### OpenAI
+arxivchat uses `text-embedding-ada-002` by default, you can change that in `app/tools/factory.py`
+
+### HuggingFace
+For now you can use any model that works with [`sentence_transformers`](https://huggingface.co/sentence-transformers).
+You can change the model used in `app/tools/factory.py`
+
 
 ## ToDO
-- [ ] Automount gs arxiv bucket on deployment.
+- [ ] Automount gcs arxiv bucket on deployment.
 - [ ] Option to use Azure OpenAI.
 - [ ] AWS deployment
+- [ ] Add tests
+- [ ] Automate ingesting new publications
+- [ ] Add more vectostores options
+- [ ] Add more embeddings options
+- [ ] Support streaming responses
+- [ ] Take embeddings model name from .env
 
 ## Issues & contribution
 If you have any problems please use GitHub issues to report them.
-If you'd like to contribute to this project, please create a pull request.
+
+## Contributing
+We'd love your help in making Prr even better! To contribute, please follow these steps:
+
+- Fork the repo
+- Create a new branch
+- Commit your changes
+- Push the branch to your fork
+- Create a new Pull Request
+
+## License
+arXivchat is released under the MIT License.
