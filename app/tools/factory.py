@@ -24,7 +24,7 @@ def get_embeddings():
             else:
                 model_kwargs = {"device": "cpu"}
             embeddings = HuggingFaceEmbeddings(
-                model_name="sentence-transformers/all-mpnet-base-v2", model_kwargs=model_kwargs
+                model_name="sentence-transformers/multi-qa-mpnet-base-dot-v1", model_kwargs=model_kwargs
             )
 
             return embeddings
