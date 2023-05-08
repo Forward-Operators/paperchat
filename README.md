@@ -110,10 +110,10 @@ There are terraform files in `deployment` directory. Use one that suits you best
 You can also just build a Docker image and run it wherever you want. The image file is quite big though. 
 
 ### GCP
-For now it's deployed as Cloud Run using docker image, so it's API only deployment. Data ingestion must be run on other machine (I do recommend GPU-enabled Compute Engines, especially if you'd like to use Hugging Face embeddings and because you can mount datase from Google Storage directly using `gcsfuse`)
+For now can be deployed as Cloud Run using docker image, so it's API only deployment. Data ingestion must be run on other machine (I do recommend GPU-enabled Compute Engines, especially if you'd like to use Hugging Face embeddings and because you can mount datase from Google Storage directly using `gcsfuse`)
 Potential [solution](https://cloud.google.com/run/docs/tutorials/network-filesystems-fuse) to use GCS bucket with Cloud Run
 ### Azure
-For now it's deployed as Container Apps (API only deployment, you need another deployment for ingester)
+For now it can be deployed as Container Apps (API only deployment, you need another deployment for ingester)
 
 ### AWS
 AWS is not supported yet. Coming soon.
@@ -121,11 +121,11 @@ AWS is not supported yet. Coming soon.
 ## Embeddings
 
 ### OpenAI
-arxivchat uses `text-embedding-ada-002` by default, you can change that in `app/tools/factory.py`
+arxivchat uses `text-embedding-ada-002`  for OpenAI by default, you can change that in `app/tools/factory.py`
 
 ### HuggingFace
 For now you can use any model that works with [`sentence_transformers`](https://huggingface.co/sentence-transformers).
-You can change the model used in `app/tools/factory.py`
+You can change the model in `app/tools/factory.py`
 
 
 ## ToDO
@@ -143,7 +143,7 @@ You can change the model used in `app/tools/factory.py`
 If you have any problems please use GitHub issues to report them.
 
 ## Contributing
-We'd love your help in making Prr even better! To contribute, please follow these steps:
+We'd love your help in making arXivchat even better! To contribute, please follow these steps:
 
 - Fork the repo
 - Create a new branch
