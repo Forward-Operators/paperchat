@@ -1,0 +1,133 @@
+openapi: 3.0.2
+info:
+  title: arXiv publications Plugin
+  description: A plugin for the arXiv publications.
+  version: 0.1.0
+  servers:
+    - url: http://localhost:7000
+      description: Development server
+paths:
+  /api/v1/ingest:
+    post:
+      summary: Ingest
+      description: Create celery ingest task. Return task_id to client in order to check status of task.
+      operationId: ingest_api_v1_ingest_post
+      parameters:
+        - required: true
+          schema:
+            title: Query
+            type: string
+          name: query
+          in: query
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskTicket'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/ingest/result/{task_id}:
+    get:
+      summary: Ingest Result
+      description: Fetch result of ingest task.
+      operationId: ingest_result_api_v1_ingest_result__task_id__get
+      parameters:
+        - required: true
+          schema:
+            title: Task Id
+            type: string
+          name: task_id
+          in: path
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskTicket'
+        '202':
+          description: Task still processing
+        '404':
+          description: Task not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/ask:
+    post:
+      summary: Query
+      description: Accepts search query objects array each with query and optional filter. Break down complex questions into sub-questions. Refine results by criteria, e.g. time / source, don't do this often. Split queries if ResponseTooLargeError occurs.
+      operationId: ingest_api_v1_ask_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: Query
+              type: string
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      title: HTTPValidationError
+      type: object
+      properties:
+        detail:
+          title: Detail
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+    TaskTicket:
+      title: TaskTicket
+      required:
+        - task_id
+        - status
+      type: object
+      properties:
+        task_id:
+          title: Task Id
+          type: string
+        status:
+          title: Status
+          type: string
+      description: ID and status for the async tasks
+    ValidationError:
+      title: ValidationError
+      required:
+        - loc
+        - msg
+        - type
+      type: object
+      properties:
+        loc:
+          title: Location
+          type: array
+          items:
+            anyOf:
+              - type: string
+              - type: integer
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
