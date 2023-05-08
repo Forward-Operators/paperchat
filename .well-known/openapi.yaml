@@ -4,6 +4,8 @@ info:
   description: A plugin for the arXiv publications.
   version: 0.1.0
   servers:
+    - url: https://arxivchat-wotoomagva-lm.a.run.app
+      description: Production server
     - url: http://localhost:7000
       description: Development server
 paths:
