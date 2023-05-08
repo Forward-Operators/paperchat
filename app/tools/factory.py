@@ -21,6 +21,8 @@ def get_embeddings():
 
             if os.environ.get("CUDA_ENABLED") == "True":
                 model_kwargs = {"device": "cuda"}
+            elif os.environ.get("MPS_ENABLED") == "True":
+                model_kwargs = {"device": "mps"}
             else:
                 model_kwargs = {"device": "cpu"}
             embeddings = HuggingFaceEmbeddings(
