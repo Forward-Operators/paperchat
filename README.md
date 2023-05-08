@@ -18,7 +18,7 @@ You are more than welcome to contribute!
 
 ## Architecture
 
-_miro flowchart here_
+![diagram](./images/diagram.png)
 
 
 ## Setup
@@ -26,7 +26,7 @@ Follow these steps to quickly set up and run the arXiv plugin:
 
 - Install Python 3.10, if not already installed.
 
-- Clone the repository: git clone https://github.com/fwdops/arxivchat.git
+- Clone the repository: git clone https://github.com/Forward-Operators/arxivchat.git
 
 - Navigate to the cloned repository directory: cd /path/to/arxivchat
 
