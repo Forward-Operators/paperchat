@@ -1,0 +1,19 @@
+version: '3.9'
+
+services:
+  arxivchat:
+    image: ghcr.io/forward-operators/arxivchat:latest
+    # build: .
+    ports:
+      - 7000:8000
+    env_file:
+      - ./app/.env
+    networks:
+      - net
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - 6333:6333
+      - 6334:6334 # grpc
+    volumes:
+      - ./qdrant_data:/qdrant/storage
