@@ -1,4 +1,5 @@
 import os
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -26,9 +27,19 @@ def get_embeddings():
             else:
                 model_kwargs = {"device": "cpu"}
             embeddings = HuggingFaceEmbeddings(
-                model_name="sentence-transformers/multi-qa-mpnet-base-dot-v1", model_kwargs=model_kwargs
+                model_name="sentence-transformers/multi-qa-mpnet-base-dot-v1",
+                model_kwargs=model_kwargs,
             )
 
+            return embeddings
+        case "huggingface-hub":
+            from langchain.embeddings import HuggingFaceHubEmbeddings
+
+            embeddings = HuggingFaceHubEmbeddings(
+                repo_id="sentence-transformers/multi-qa-mpnet-base-dot-v1",
+                task="feature-extraction",
+                huggingfacehub_api_token=os.environ.get("HUGGINGFACE_API_TOKEN"),
+            )
             return embeddings
         case _:
             raise ValueError(f"Unsupported embeddings : {embeddings}")
@@ -55,7 +66,7 @@ def get_database():
             db = Qdrant(
                 collection_name="arxiv",
                 client=qdrant_client,
-                embedding_function=embeddings.embed_query,
+                embeddings=embeddings,
             )
 
             return db
@@ -76,7 +87,8 @@ def get_database():
             client = chromadb.Client(settings=client_settings)
             client.get_or_create_collection(
                 name=os.getenv("CHROMA_COLLECTION", "arxiv"),
-                embedding_function=embeddings)
+                embedding_function=embeddings,
+            )
             db = Chroma(
                 collection_name=os.getenv("CHROMA_COLLECTION", "arxiv"),
                 embedding_function=embeddings,
