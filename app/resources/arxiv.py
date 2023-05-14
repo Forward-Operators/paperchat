@@ -1,19 +1,25 @@
 import json
+import os
 
+from langchain.chains import ConversationalRetrievalChain
 from langchain.chains.question_answering import load_qa_chain
 from langchain.chat_models import ChatOpenAI
 from tools.factory import get_embeddings, get_database
+from templates.qa_prompt import QA_PROMPT
+from templates.condense_prompt import CONDENSE_PROMPT
 
 embeddings = get_embeddings()
 db = get_database()
 
 
 def chat(query):
-    llm = ChatOpenAI(temperature=0, model_name="gpt-4")
-    chain = load_qa_chain(llm, chain_type="stuff")
-    docs = db.similarity_search(query=query, k=5)
-    # chat_history = []
-    result = chain.run(input_documents=docs, question=query)
+    chat_history = []
+    model = ChatOpenAI(model_name=os.getenv("OPENAI_GPT_MODEL"), temperature=0, streaming=True)
+    retriever = db.as_retriever(search_kwargs={
+        "k": 5},  qa_template=QA_PROMPT, question_generator_template=CONDENSE_PROMPT)
+    qa = ConversationalRetrievalChain.from_llm(
+        llm=model, retriever=retriever, return_source_documents=True)
+    result = qa({"question": query, "chat_history": chat_history})
     answer = {}
     answer["answer"] = result["answer"]
     answer["source"] = result["source_documents"][0].metadata
