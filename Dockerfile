@@ -91,6 +91,7 @@ RUN groupadd -g 1500 poetry && \
 COPY --chown=poetry:poetry ./app /app
 USER poetry
 WORKDIR /app
+RUN mkdir -p ./arxiv_data
 
 ENTRYPOINT /docker-entrypoint.sh $0 $@
 CMD [ "gunicorn", "--worker-class uvicorn.workers.UvicornWorker", "--config /gunicorn_conf.py", "main:app"]

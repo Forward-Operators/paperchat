@@ -1,10 +1,10 @@
 import logging
 import os
-from tools.factory import get_embeddings, get_database
 
 import arxiv
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from tools.factory import get_database, get_embeddings
 
 logging.basicConfig(level=logging.INFO)
 
@@ -18,7 +18,9 @@ def load_to_database(pdf_path):
         # checking if it is a file
         if os.path.isfile(f):
             text_splitter = RecursiveCharacterTextSplitter(
-                chunk_size=1000, chunk_overlap=300, length_function=len,
+                chunk_size=1000,
+                chunk_overlap=300,
+                length_function=len,
             )
             loader = PyPDFLoader(f)
             pages = loader.load_and_split(text_splitter=text_splitter)

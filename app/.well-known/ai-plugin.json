@@ -10,10 +10,10 @@
     },
     "api": {
       "type": "openapi",
-      "url": "https://your-app-url.com/.well-known/openapi.yaml",
+      "url": "https://arxivchat-wotoomagva-lm.a.run.app/.well-known/openapi.yaml",
       "has_user_authentication": false
     },
-    "logo_url": "https://your-app-url.com/.well-known/logo.png",
-    "contact_email": "hello@fwdoperators.com.com", 
+    "logo_url": "https://arxivchat-wotoomagva-lm.a.run.app/.well-known/logo.png",
+    "contact_email": "hello@fwdoperators.com", 
     "legal_info_url": "http://example.com/legal-info"
   }

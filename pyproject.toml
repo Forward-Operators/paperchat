@@ -20,7 +20,7 @@ qdrant-client = "^1.1.5"
 feedparser = "^6.0.10"
 pymupdf = "^1.22.2"
 pdfminer-six = "^20221105"
-langchain = {extras = ["azure", "embeddings", "openai", "qdrant"], version = "^0.0.161"}
+langchain = {extras = ["azure", "embeddings", "openai", "qdrant"], version = "^0.0.166"}
 huggingface-hub = "^0.14.1"
 pinecone-client = "^2.2.1"
 pinecone-text = "^0.4.2"

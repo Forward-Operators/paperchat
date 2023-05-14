@@ -2,6 +2,7 @@ import sentry_sdk
 from api.api_v1.api import api_router
 from core.config import settings
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 
 # sentry_sdk.init(dsn=settings.SENTRY_DSN, traces_sample_rate=0.7)
@@ -19,4 +20,5 @@ if settings.BACKEND_CORS_ORIGINS:
         allow_headers=["*"],
     )
 
+app.mount("/.well-known", StaticFiles(directory="./.well-known"), name="static")
 app.include_router(api_router, prefix=settings.API_V1_STR)
