@@ -20,5 +20,5 @@ if settings.BACKEND_CORS_ORIGINS:
         allow_headers=["*"],
     )
 
-app.mount("/.well-known", StaticFiles(directory="../.well-known"), name="static")
+app.mount("/.well-known", StaticFiles(directory="./.well-known"), name="static")
 app.include_router(api_router, prefix=settings.API_V1_STR)
