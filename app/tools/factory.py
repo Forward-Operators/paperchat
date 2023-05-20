@@ -41,6 +41,22 @@ def get_embeddings():
                 huggingfacehub_api_token=os.environ.get("HUGGINGFACE_API_TOKEN"),
             )
             return embeddings
+        case "huggingface-instruct":
+            from langchain.embeddings import HuggingFaceInstructEmbeddings
+
+            if os.environ.get("CUDA_ENABLED") == "True":
+                model_kwargs = {"device": "cuda"}
+            elif os.environ.get("MPS_ENABLED") == "True":
+                model_kwargs = {"device": "mps"}
+            else:
+                model_kwargs = {"device": "cpu"}
+
+            # model_name = "hkunlp/instructor-large"
+            model_name = "hkunlp/instructor-xl"
+            embeddings = HuggingFaceInstructEmbeddings(
+                model_name=model_name, model_kwargs=model_kwargs
+            )
+            return embeddings
         case _:
             raise ValueError(f"Unsupported embeddings : {embeddings}")
 
