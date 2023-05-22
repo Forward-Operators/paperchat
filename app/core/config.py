@@ -18,6 +18,7 @@ class Settings(BaseSettings):
         "http://localhost",
         "http://localhost:4200",
         "http://localhost:3000",
+        "https://chat.openai.com",
     ]
     PROJECT_NAME: str
 
