@@ -20,12 +20,14 @@ qdrant-client = "^1.1.5"
 feedparser = "^6.0.10"
 pymupdf = "^1.22.2"
 pdfminer-six = "^20221105"
-langchain = {extras = ["azure", "embeddings", "openai", "qdrant"], version = "^0.0.166"}
+langchain = {extras = ["azure", "embeddings", "openai", "qdrant"], version = "^0.0.174"}
 huggingface-hub = "^0.14.1"
 pinecone-client = "^2.2.1"
 pinecone-text = "^0.4.2"
 gunicorn = "^20.1.0"
 spacy = "^3.5.2"
+instructorembedding = "^1.0.0"
+pypdfium2 = "^4.11.0"
 
 [tool.poetry.group.dev.dependencies]
 isort = "^5.12.0"
