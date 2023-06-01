@@ -28,6 +28,16 @@ def chat(query):
     result = qa({"question": query, "chat_history": chat_history})
     answer = {}
     answer["answer"] = result["answer"]
-    answer["source"] = result["source_documents"][0].metadata
+    source_documents = result["source_documents"]
+    parsed_documents = []
+    for doc in source_documents:
+        parsed_doc = {
+                "metadata": {
+                    "page_number": doc.metadata.get("page_number", 0),
+                    "source": doc.metadata.get("source", ""),
+                },
+            }
+        parsed_documents.append(parsed_doc)
+    answer["sources"] = parsed_documents
     json_data = json.dumps(answer)
     return json_data

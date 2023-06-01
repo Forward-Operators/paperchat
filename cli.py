@@ -1,9 +1,9 @@
 import json
 
 from dotenv import load_dotenv
-
+import logging
 from app.chat import ask
-
+logging.basicConfig(level=logging.DEBUG)
 load_dotenv()
 
 
