@@ -4,7 +4,7 @@ import os
 from langchain.chains import RetrievalQAWithSourcesChain
 from langchain.chains.question_answering import load_qa_chain
 from langchain.chat_models import ChatOpenAI
-from langchain.document_loaders import PyMuPDFLoader
+from langchain.document_loaders import PyMuPDFLoader, PDFPlumberLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 from app.tools.factory import get_database, get_embeddings
@@ -21,7 +21,7 @@ def load_data():
         f = os.path.join(docs_path, filename)
         if os.path.isfile(f):
             try:
-                loader = PyMuPDFLoader(f)
+                loader = PDFPlumberLoader(f)
                 print(f"Loading {f}")
                 text_splitter = RecursiveCharacterTextSplitter(
                     chunk_size=2000,

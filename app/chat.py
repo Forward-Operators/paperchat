@@ -27,6 +27,7 @@ def ask():
         model_name=os.getenv("OPENAI_GPT_MODEL"), temperature=0, streaming=True
     )
     retriever = db.as_retriever(
+        search_type="similarity",
         search_kwargs={"k": 5},
         qa_template=QA_PROMPT,
         question_generator_template=CONDENSE_PROMPT,
