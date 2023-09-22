@@ -6,9 +6,8 @@ from langchain.chains.question_answering import load_qa_chain
 from langchain.chat_models import ChatOpenAI
 from templates.condense_prompt import CONDENSE_PROMPT
 from templates.qa_prompt import QA_PROMPT
-from tools.factory import get_database, get_embeddings
+from tools.factory import get_database
 
-embeddings = get_embeddings()
 db = get_database()
 
 
