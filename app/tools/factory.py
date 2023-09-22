@@ -28,6 +28,7 @@ def get_embeddings():
                 model_kwargs = {"device": "cpu"}
             embeddings = HuggingFaceEmbeddings(
                 model_name="sentence-transformers/multi-qa-mpnet-base-dot-v1",
+                cache_folder="./models",
                 model_kwargs=model_kwargs,
             )
 
@@ -40,25 +41,19 @@ def get_embeddings():
                 task="feature-extraction",
                 huggingfacehub_api_token=os.environ.get("HUGGINGFACE_API_TOKEN"),
             )
+
             return embeddings
-        case "huggingface-instruct":
-            from langchain.embeddings import HuggingFaceInstructEmbeddings
+        case "huggingface-inference":
+            from .inference_embeddings import HuggingFaceInferenceEmbeddings
 
-            if os.environ.get("CUDA_ENABLED") == "True":
-                model_kwargs = {"device": "cuda"}
-            elif os.environ.get("MPS_ENABLED") == "True":
-                model_kwargs = {"device": "mps"}
-            else:
-                model_kwargs = {"device": "cpu"}
-
-            # model_name = "hkunlp/instructor-large"
-            model_name = "hkunlp/instructor-xl"
-            embeddings = HuggingFaceInstructEmbeddings(
-                model_name=model_name, model_kwargs=model_kwargs
+            embeddings = HuggingFaceInferenceEmbeddings(
+                model_url=os.environ.get("HUGGINGFACE_MODEL_URL"),
+                huggingface_api_token=os.environ.get("HUGGINGFACE_API_TOKEN"),
             )
+
             return embeddings
         case _:
-            raise ValueError(f"Unsupported embeddings : {embeddings}")
+            raise ValueError(f"Unsupported embeddings : {embeddings_engine}")
 
 
 def get_database():
@@ -127,7 +122,9 @@ def get_database():
             )
             index_name = os.getenv("PINECONE_INDEX_NAME", "arxiv")
             db = Pinecone.from_existing_index(
-                embedding=embeddings, index_name=index_name
+                embedding=embeddings,
+                index_name=index_name,
+                namespace=os.getenv("PINECONE_NAMESPACE", "website"),
             )
 
             return db
